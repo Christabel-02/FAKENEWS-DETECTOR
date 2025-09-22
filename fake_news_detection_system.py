@@ -152,45 +152,15 @@ model_img.save("image_model.h5")
 # # STEP 7: Streamlit Deployment
 # # ======================================
 # %%writefile app.py
-# import streamlit as st
-# import tensorflow as tf
-# from tensorflow.keras.preprocessing.sequence import pad_sequences
-# import numpy as np
-# import cv2
+import streamlit as st
+import tensorflow as tf
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import numpy as np
+import cv2
 # 
 # # Load models
-# text_model = tf.keras.models.load_model("text_model.h5")
-# img_model = tf.keras.models.load_model("image_model.h5")
-# 
-# # Tokenizer (rebuild from training)
-# import pickle
-# # For real project, save tokenizer with pickle during training
-# # tokenizer = pickle.load(open("tokenizer.pkl", "rb"))
-# 
-# st.title("📰 Fake News Detection System")
-# 
-# choice = st.radio("Choose input type:", ["Text", "Image"])
-# 
-# if choice == "Text":
-#     user_text = st.text_area("Enter news article text here:")
-#     if st.button("Check"):
-#         seq = tokenizer.texts_to_sequences([user_text])
-#         pad = pad_sequences(seq, maxlen=200)
-#         pred = text_model.predict(pad)[0][0]
-#         st.write("✅ Real News" if pred > 0.5 else "❌ Fake News")
-# 
-# elif choice == "Image":
-#     uploaded = st.file_uploader("Upload an image", type=["jpg","png","jpeg"])
-#     if uploaded:
-#         file_bytes = np.asarray(bytearray(uploaded.read()), dtype=np.uint8)
-#         img = cv2.imdecode(file_bytes, 1)
-#         img = cv2.resize(img, (128,128)) / 255.0
-#         img = np.expand_dims(img, axis=0)
-#         pred = img_model.predict(img)[0][0]
-#         st.write("✅ Real Image" if pred > 0.5 else "❌ Fake Image")
-#
 
-!ls
+# 
 
 from google.colab import files
 
