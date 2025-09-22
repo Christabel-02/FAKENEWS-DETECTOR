@@ -1,9 +1,16 @@
-streamlit
 tensorflow
+keras
+transformers
+streamlit
+opencv-python-headless
+kagglehub
+torch
+torchvision
+Pillow
 numpy
 pandas
-Pillow
-transformers
-gdown
-torch
+matplotlib
+scikit-learn
+
+
 
