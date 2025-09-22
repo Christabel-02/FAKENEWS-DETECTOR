@@ -10,8 +10,6 @@ Original file is located at
 # ======================================
 # STEP 1: Install Dependencies
 # ======================================
-!pip install tensorflow keras transformers streamlit opencv-python-headless kagglehub --quiet
-!pip install torch torchvision --quiet
 
 import pandas as pd
 import numpy as np
@@ -278,4 +276,3 @@ with tab2:
         else:
             st.success("✅ This news image is likely **True**")
 
-pip install -r requirements.txt
