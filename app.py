@@ -17,7 +17,7 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 # --- Google Drive model IDs (replace with your own) ---
 text_model_id = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"
 image_model_id = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr"
-tokenizer_id = "YOUR_TOKENIZER_FILE_ID"  # 👈 Upload tokenizer.pkl to Drive
+tokenizer_id = "1xGHQ_RYMPvc4Vfz4zo7-kaLfiM5WldoZ"  # 👈 Upload tokenizer.pkl to Drive
 
 text_model_path = os.path.join(MODEL_DIR, "text_model.h5")
 image_model_path = os.path.join(MODEL_DIR, "image_model.h5")
