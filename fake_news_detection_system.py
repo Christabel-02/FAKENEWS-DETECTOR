@@ -98,8 +98,8 @@ fake_dir = os.path.join(dummy_base_dir, "fake")
 real_dir = os.path.join(dummy_base_dir, "real")
 
 os.makedirs(fake_dir, exist_ok=True)
-os.makedirs(real_dir, exist_ok=True)
-
+os.makedirs(real_dir, eist_ok=True)
+x
 # Create some dummy images
 def create_dummy_image(filepath, size=(128, 128)):
     img = Image.fromarray(np.random.randint(0, 255, size, dtype='uint8'), 'L').convert('RGB')
