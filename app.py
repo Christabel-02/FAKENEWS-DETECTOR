@@ -20,13 +20,13 @@ TOKENIZER_ID  = "1xGHQ_RYMPvc4Vfz4zo7-kaLfiM5WldoZ"
 os.makedirs("models", exist_ok=True)
 
 if not os.path.exists("text_model.h5"):
-    gdown.download(f"https://drive.google.com/uc?id={TEXT_MODEL_ID}", "models/text_model.h5", quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={TEXT_MODEL_ID}", "text_model.h5", quiet=False)
 
 if not os.path.exists("image_model.h5"):
-    gdown.download(f"https://drive.google.com/uc?id={IMAGE_MODEL_ID}", "models/image_model.h5", quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={IMAGE_MODEL_ID}", "image_model.h5", quiet=False)
 
 if not os.path.exists("tokenizer.pkl"):
-    gdown.download(f"https://drive.google.com/uc?id={TOKENIZER_ID}", "models/tokenizer.pkl", quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={TOKENIZER_ID}", "tokenizer.pkl", quiet=False)
 
 
 # ================================
