@@ -18,9 +18,9 @@ TOKENIZER_ID  = "1xGHQ_RYMPvc4Vfz4zo7-kaLfiM5WldoZ"
 # Download files if not present
 # ================================
 
-tokenizer_path = "tokenizer.pkl"
-text_model_path = "text_model.h5"
-image_model_path = "image_model.h5"
+tokenizer_path = "models/tokenizer.pkl"
+text_model_path = "models/text_model.h5"
+image_model_path = "models/image_model.h5"
 
 
 
