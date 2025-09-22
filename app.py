@@ -10,7 +10,7 @@ import os
 # ================================
 # Google Drive File IDs (replace with yours)
 # ================================
-TEXT_MODEL_ID = "/1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"
+TEXT_MODEL_ID = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"
 IMAGE_MODEL_ID = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr"
 TOKENIZER_ID  = "1xGHQ_RYMPvc4Vfz4zo7-kaLfiM5WldoZ"
 
