@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms, models
-from transformers import BertTokenizer, BertForSequenceClassification,AdamW,get_scheduler
+from transformers import BertTokenizer, BertForSequenceClassification,AdamW, get_scheduler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from tqdm import tqdm
