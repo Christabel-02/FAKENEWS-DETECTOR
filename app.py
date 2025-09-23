@@ -5,7 +5,8 @@ import os
 import gdown
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import BertTokenizer, BertForSequenceClassification, get_scheduler
+from transformers.optimization import AdamW
 import torch
 
 st.set_page_config(page_title="Fake News Detection", layout="centered")
