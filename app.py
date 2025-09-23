@@ -3,9 +3,9 @@ from PIL import Image
 import numpy as np
 import os
 import gdown
+import tensorflow as tf
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from transformers import BertTokenizer, TFBertForSequenceClassification
 
 st.set_page_config(page_title="Fake News Detection", layout="centered")
 st.title("🌐 Fake News Detection (Text + Image)")
@@ -15,15 +15,16 @@ MODEL_DIR = "tmp/model"
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 # --- Google Drive model IDs (replace with your IDs) ---
-text_model_id = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"
-image_model_id = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr"
+text_model_id = "YOUR_TEXT_MODEL_ID"   # replace with your uploaded BERT model zip
+image_model_id = "YOUR_IMAGE_MODEL_ID" # same as before
 
-text_model_path = os.path.join(MODEL_DIR, "text_model.h5")
+text_model_path = os.path.join(MODEL_DIR, "text_model")
 image_model_path = os.path.join(MODEL_DIR, "image_model.h5")
 
 # --- Download models from Google Drive ---
 if not os.path.exists(text_model_path):
-    gdown.download(f"https://drive.google.com/uc?id={text_model_id}", text_model_path, quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={text_model_id}", "bert_model.zip", quiet=False)
+    os.system("unzip bert_model.zip -d tmp/model/")  # unzip BERT model
 
 if not os.path.exists(image_model_path):
     gdown.download(f"https://drive.google.com/uc?id={image_model_id}", image_model_path, quiet=False)
@@ -31,15 +32,20 @@ if not os.path.exists(image_model_path):
 # --- Load models ---
 @st.cache_resource
 def load_models():
-    text_model = load_model(text_model_path)
-    image_model = load_model(image_model_path)
-    return text_model, image_model
+    # Load BERT (text model)
+    text_model = TFBertForSequenceClassification.from_pretrained(text_model_path)
+    tokenizer = BertTokenizer.from_pretrained(text_model_path)
 
-text_model, image_model = load_models()
+    # Load CNN (image model)
+    image_model = load_model(image_model_path)
+    return text_model, tokenizer, image_model
+
+text_model, tokenizer, image_model = load_models()
 
 # --- Tabs ---
 tab1, tab2 = st.tabs(["Text News", "Image News"])
 
+# ---------------- TEXT TAB ----------------
 with tab1:
     st.header("📰 Text-based News Detection")
     news_text = st.text_area("Paste news article here:")
@@ -47,17 +53,17 @@ with tab1:
         if news_text.strip() == "":
             st.warning("Please enter some news text!")
         else:
-            tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
-            tokenizer.fit_on_texts([news_text])
-            seq = tokenizer.texts_to_sequences([news_text])
-            padded = pad_sequences(seq, maxlen=500, padding='post', truncating='post')
+            inputs = tokenizer(news_text, return_tensors="tf", padding=True, truncation=True, max_length=64)
+            outputs = text_model(inputs)
+            probs = tf.nn.softmax(outputs.logits, axis=-1).numpy()[0]
+            pred_class = np.argmax(probs)
 
-            pred = text_model.predict(padded)[0][0]
-            if pred > 0.5:
-                st.error("⚠️ This news is likely **Fake**")
-            else:
-                st.success("✅ This news is likely **True**")
+            if pred_class == 1:  # fake
+                st.error(f"⚠️ This news is likely **Fake** (confidence: {probs[1]:.2f})")
+            else:  # real
+                st.success(f"✅ This news is likely **True** (confidence: {probs[0]:.2f})")
 
+# ---------------- IMAGE TAB ----------------
 with tab2:
     st.header("🖼 Image-based News Detection")
     uploaded_file = st.file_uploader("Upload a news image", type=["png", "jpg", "jpeg"])
