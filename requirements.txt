@@ -1,10 +1,9 @@
 streamlit
-torch
-transformers
-tensorflow
-keras
-pillow
+Pillow
 gdown
-scikit-learn
+tensorflow
+transformers
+torch
 pandas
-
+scikit-learn
+tqdm
