@@ -19,12 +19,12 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 text_model_id = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"   # replace with your uploaded BERT model zip
 image_model_id = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr" # replace with your uploaded CNN model h5
 
-text_model_path = os.path.join(MODEL_DIR, "text_model")
+text_model_path = os.path.join(MODEL_DIR, "text_model.h5")
 image_model_path = os.path.join(MODEL_DIR, "image_model.h5")
 
 # --- Download models from Google Drive ---
 if not os.path.exists(text_model_path):
-    gdown.download(f"https://drive.google.com/uc?id={text_model_id}", "bert_model.zip", quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={text_model_id}", "text_model_path", quiet=False)
     os.system("unzip bert_model.zip -d tmp/model/")  # unzip BERT model
 
 if not os.path.exists(image_model_path):
