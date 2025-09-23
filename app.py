@@ -15,8 +15,8 @@ MODEL_DIR = "tmp/model"
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 # --- Google Drive model IDs (replace with your IDs) ---
-text_model_id = "YOUR_TEXT_MODEL_ID"   # replace with your uploaded BERT model zip
-image_model_id = "YOUR_IMAGE_MODEL_ID" # same as before
+text_model_id = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"   # replace with your uploaded BERT model zip
+image_model_id = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr" # same as before
 
 text_model_path = os.path.join(MODEL_DIR, "text_model")
 image_model_path = os.path.join(MODEL_DIR, "image_model.h5")
