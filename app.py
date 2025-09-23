@@ -16,7 +16,7 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 
 # --- Google Drive model IDs (replace with your IDs) ---
 text_model_id = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"
-image_model_id = "Y1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr"
+image_model_id = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr"
 
 text_model_path = os.path.join(MODEL_DIR, "text_model.h5")
 image_model_path = os.path.join(MODEL_DIR, "image_model.h5")
