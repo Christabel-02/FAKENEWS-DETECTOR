@@ -1,10 +1,25 @@
-streamlit
-tensorflow
-transformers
+# Core
+numpy
+pandas
+scikit-learn
+tqdm
+
+# Deep Learning
 torch
 torchvision
 torchaudio
+
+# Transformers (Hugging Face)
+transformers
+datasets
+sentencepiece
+
+# Image
 Pillow
+
+# Streamlit App
+streamlit
 gdown
 
-
+# Optional (avoid warnings, logging, etc.)
+matplotlib
