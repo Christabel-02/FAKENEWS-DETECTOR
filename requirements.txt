@@ -1,17 +1,10 @@
-tensorflow
-keras
-transformers
 streamlit
-opencv-python-headless
-kagglehub
+tensorflow
+transformers
 torch
 torchvision
+torchaudio
 Pillow
-numpy
-pandas
-matplotlib
-scikit-learn
 gdown
-
 
 
