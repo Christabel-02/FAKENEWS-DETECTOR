@@ -1,104 +1,77 @@
 import streamlit as st
+from PIL import Image
 import numpy as np
-import pickle
+import os
 import gdown
 from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from PIL import Image
-import os
 
-# ================================
-# Google Drive File IDs (replace with yours)
-# ================================
-TEXT_MODEL_ID = "1uVzRVVMEsdIxw7pItqiWN3RI_Mgp8GRQ"
-IMAGE_MODEL_ID = "1mq6HKFdE2cjNnrhp5f4ROKA4RRCrFxIr"
-TOKENIZER_ID  = "1xGHQ_RYMPvc4Vfz4zo7-kaLfiM5WldoZ"
+st.set_page_config(page_title="Fake News Detection", layout="centered")
+st.title("🌐 Fake News Detection (Text + Image)")
 
-# ================================
-# Download files if not present
-# ================================
+# --- Safe directory for models ---
+MODEL_DIR = "tmp/model"
+os.makedirs(MODEL_DIR, exist_ok=True)
 
-tokenizer_path = "models/tokenizer.pkl"
-text_model_path = "models/text_model.h5"
-image_model_path = "models/image_model.h5"
+# --- Google Drive model IDs (replace with your IDs) ---
+text_model_id = "YOUR_TEXT_MODEL_FILE_ID"
+image_model_id = "YOUR_IMAGE_MODEL_FILE_ID"
 
+text_model_path = os.path.join(MODEL_DIR, "text_model.h5")
+image_model_path = os.path.join(MODEL_DIR, "image_model.h5")
 
+# --- Download models from Google Drive ---
+if not os.path.exists(text_model_path):
+    gdown.download(f"https://drive.google.com/uc?id={text_model_id}", text_model_path, quiet=False)
 
-# ================================
-# Load models and tokenizer
-# ================================
+if not os.path.exists(image_model_path):
+    gdown.download(f"https://drive.google.com/uc?id={image_model_id}", image_model_path, quiet=False)
+
+# --- Load models ---
 @st.cache_resource
-def load_text_model():
-    return load_model("text_model.h5")
+def load_models():
+    text_model = load_model(text_model_path)
+    image_model = load_model(image_model_path)
+    return text_model, image_model
 
-@st.cache_resource
-def load_image_model():
-    return load_model("image_model.h5")
+text_model, image_model = load_models()
 
-@st.cache_resource
-def load_tokenizer():
-    with open("tokenizer.pkl", "rb") as f:
-        return pickle.load(f)
+# --- Tabs ---
+tab1, tab2 = st.tabs(["Text News", "Image News"])
 
-text_model = load_text_model()
-image_model = load_image_model()
-tokenizer = load_tokenizer()
-
-MAXLEN = 500  # must match training
-
-
-# ================================
-# Prediction functions
-# ================================
-def predict_text(text):
-    seq = tokenizer.texts_to_sequences([text])
-    padded = pad_sequences(seq, maxlen=MAXLEN, padding="post", truncating="post")
-    pred = text_model.predict(padded)[0][0]
-    return "✅ Real News" if pred > 0.5 else "❌ Fake News", float(pred)
-
-
-def predict_image(image):
-    img = image.resize((224, 224))
-    img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)  # (1,224,224,3)
-    pred = image_model.predict(img_array)[0][0]
-    return "✅ Real Image" if pred > 0.5 else "❌ Fake Image", float(pred)
-
-
-# ================================
-# Streamlit UI
-# ================================
-st.set_page_config(page_title="Fake News Detector", page_icon="📰", layout="centered")
-
-st.title("📰 Fake News Detection System")
-st.write("Detect fake news using **Text Analysis** and **Image Classification**")
-
-# Tabs for Text and Image
-tab1, tab2 = st.tabs(["📝 Text News", "🖼 Image News"])
-
-# --- Text Tab ---
 with tab1:
-    st.subheader("Enter a news article:")
-    user_text = st.text_area("Paste news content here...", height=150)
-
-    if st.button("🔍 Analyze Text"):
-        if user_text.strip():
-            label, prob = predict_text(user_text)
-            st.success(f"**Prediction:** {label}")
-            st.info(f"Confidence Score: {prob:.2f}")
+    st.header("📰 Text-based News Detection")
+    news_text = st.text_area("Paste news article here:")
+    if st.button("Predict Text"):
+        if news_text.strip() == "":
+            st.warning("Please enter some news text!")
         else:
-            st.warning("⚠️ Please enter some text!")
+            tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
+            tokenizer.fit_on_texts([news_text])
+            seq = tokenizer.texts_to_sequences([news_text])
+            padded = pad_sequences(seq, maxlen=500, padding='post', truncating='post')
 
-# --- Image Tab ---
+            pred = text_model.predict(padded)[0][0]
+            if pred > 0.5:
+                st.error("⚠️ This news is likely **Fake**")
+            else:
+                st.success("✅ This news is likely **True**")
+
 with tab2:
-    st.subheader("Upload a news image:")
-    uploaded_img = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
-
-    if uploaded_img is not None:
-        image = Image.open(uploaded_img).convert("RGB")
+    st.header("🖼 Image-based News Detection")
+    uploaded_file = st.file_uploader("Upload a news image", type=["png", "jpg", "jpeg"])
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        if st.button("🔍 Analyze Image"):
-            label, prob = predict_image(image)
-            st.success(f"**Prediction:** {label}")
-            st.info(f"Confidence Score: {prob:.2f}")
+        # Preprocess image
+        img = image.resize((224, 224))
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
+
+        pred = image_model.predict(img_array)[0][0]
+        if pred > 0.5:
+            st.error("⚠️ This news image is likely **Fake**")
+        else:
+            st.success("✅ This news image is likely **True**")
